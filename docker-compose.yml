@@ -1,0 +1,27 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    image: wm_forge
+    ports:
+      - 8080:80
+    volumes:
+      - .:/srv/app
+    links:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_DATABASE: wm_forge
+      DB_USERNAME: wm_forge_user
+      DB_PASSWORD: 123456
+  mysql:
+      image: mysql:8.0
+      ports:
+        - 13306:3306
+      environment:
+        MYSQL_DATABASE: wm_forge
+        MYSQL_USER: wm_forge_user
+        MYSQL_PASSWORD: 123456
+        MYSQL_ROOT_PASSWORD: 123456
