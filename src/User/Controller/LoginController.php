@@ -11,7 +11,6 @@ class LoginController extends Controller
 {
     public function loginAction()
     {
-        throw new \Exception('qwerty');
         return new Response('Hello, World! (login controller)');
     }
 }
