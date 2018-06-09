@@ -3,22 +3,13 @@
 declare(strict_types=1);
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
-use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 
 require __DIR__.'/../vendor/autoload.php';
 
 $request = Request::createFromGlobals();
-$routes = include __DIR__.'/../routes/routes.php';
+$routes = require __DIR__ . '/../config/routes/routes.php';
+$container = require __DIR__.'/../config/di/container.php';
 
-$context = new Routing\RequestContext();
-$matcher = new Routing\Matcher\UrlMatcher($routes, $context);
-
-$controllerResolver = new ControllerResolver();
-$argumentResolver = new ArgumentResolver();
-
-$framework = new \Base\App($matcher, $controllerResolver, $argumentResolver);
-$response = $framework->handle($request);
-
-$response->send();
+/** @var $application \Base\App */
+$application = $container->get('app');
+$application->handle($request)->send();
