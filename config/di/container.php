@@ -48,10 +48,13 @@ $containerBuilder->register('app', App::class)
 $containerBuilder
     ->register('abstract_controller', \Home\Controller\IndexController::class)
     ->addMethodCall('setContainer', [new Reference('service_container')]);
-$containerBuilder->register('view', \League\Plates\Engine::class)
+$containerBuilder->register('view', \Base\Service\TemplateService::class)
     ->addMethodCall('setDirectory', [APP_ROOT . '/views'])
+    ->addMethodCall('setTranslationService', [new Reference('service_container')])
+    ->addMethodCall('setImageService', [new Reference('thumbnail_service')])
+    ->addMethodCall('initCustomTemplateFunctions')
 ;
-$containerBuilder->register('thumbnail', \Base\Service\ThumbnailService::class)
+$containerBuilder->register('thumbnail_service', \Base\Service\ThumbnailService::class)
     ->setArguments([
         APP_ROOT,
         APP_ROOT . '/public/files/cache',

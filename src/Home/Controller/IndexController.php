@@ -14,7 +14,7 @@ class IndexController extends Controller
     {
         $response = $this->getTemplate()->make('home/index');
         $response->data([
-            'thumb' => $this->container->get('thumbnail')
+            'thumb' => $this->container->get('thumbnail_service')
         ]);
         return new Response($response);
     }
