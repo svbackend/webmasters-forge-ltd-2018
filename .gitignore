@@ -1,4 +1,5 @@
-/phpunit.xml
+vendor
+.idea
 
-# Composer PHAR
-/composer.phar
+composer.phar
+.DS_Store

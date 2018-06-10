@@ -3,7 +3,8 @@
         "symfony/http-foundation": "^4.1",
         "symfony/http-kernel": "^4.1",
         "symfony/routing": "^4.1",
-        "symfony/dependency-injection": "^4.1"
+        "symfony/dependency-injection": "^4.1",
+        "league/plates": "^3.3"
     },
     "autoload": {
         "psr-4": { "": "src/" }

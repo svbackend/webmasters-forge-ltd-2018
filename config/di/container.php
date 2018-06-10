@@ -48,5 +48,8 @@ $containerBuilder->register('app', App::class)
 $containerBuilder
     ->register('abstract_controller', \Home\Controller\IndexController::class)
     ->addMethodCall('setContainer', [new Reference('service_container')]);
+$containerBuilder->register('view', \League\Plates\Engine::class)
+    ->addMethodCall('setDirectory', [APP_ROOT . '/views'])
+;
 
 return $containerBuilder;

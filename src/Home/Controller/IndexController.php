@@ -12,6 +12,7 @@ class IndexController extends Controller
 {
     public function indexAction(Request $request)
     {
-        return new Response('Hello, World! (Here would be template with login and registration forms)');
+        $response = $this->getTemplate()->make('home/index');
+        return new Response($response);
     }
 }
