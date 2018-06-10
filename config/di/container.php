@@ -51,5 +51,13 @@ $containerBuilder
 $containerBuilder->register('view', \League\Plates\Engine::class)
     ->addMethodCall('setDirectory', [APP_ROOT . '/views'])
 ;
+$containerBuilder->register('thumbnail', \Base\Service\ThumbnailService::class)
+    ->setArguments([
+        APP_ROOT,
+        APP_ROOT . '/public/files/cache',
+        '/files/cache',
+        null
+    ])
+;
 
 return $containerBuilder;

@@ -10,9 +10,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class IndexController extends Controller
 {
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         $response = $this->getTemplate()->make('home/index');
+        $response->data([
+            'thumb' => $this->container->get('thumbnail')
+        ]);
         return new Response($response);
     }
 }
