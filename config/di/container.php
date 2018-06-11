@@ -46,11 +46,11 @@ $containerBuilder->register('app', App::class)
     ])
 ;
 $containerBuilder
-    ->register('abstract_controller', \Home\Controller\IndexController::class)
+    ->register('home_index_controller', \Home\Controller\IndexController::class)
     ->addMethodCall('setContainer', [new Reference('service_container')]);
 $containerBuilder->register('view', \Base\Service\TemplateService::class)
     ->addMethodCall('setDirectory', [APP_ROOT . '/views'])
-    ->addMethodCall('setTranslationService', [new Reference('service_container')])
+    ->addMethodCall('setTranslationService', [new Reference('translation_service')])
     ->addMethodCall('setImageService', [new Reference('thumbnail_service')])
     ->addMethodCall('initCustomTemplateFunctions')
 ;
@@ -60,6 +60,12 @@ $containerBuilder->register('thumbnail_service', \Base\Service\ThumbnailService:
         APP_ROOT . '/public/files/cache',
         '/files/cache',
         null
+    ])
+;
+$containerBuilder->register('translation_service', \Base\Service\TranslationService::class)
+    ->setArguments([
+        $config['locales'],
+        APP_ROOT . '/translations'
     ])
 ;
 

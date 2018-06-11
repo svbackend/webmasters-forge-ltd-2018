@@ -8,6 +8,9 @@ use League\Plates\Engine;
 
 class TemplateService extends Engine
 {
+    /**
+     * @var TranslationService
+     */
     private $translationService;
 
     /**
@@ -15,12 +18,12 @@ class TemplateService extends Engine
      */
     private $imageService;
 
-    public function setTranslationService(object $translationService)
+    public function setTranslationService(TranslationService $translationService)
     {
         $this->translationService = $translationService;
     }
 
-    public function setImageService(object $imageService)
+    public function setImageService(ThumbnailService $imageService)
     {
         $this->imageService = $imageService;
     }
@@ -29,7 +32,7 @@ class TemplateService extends Engine
     {
         $translationService = $this->translationService;
         $this->registerFunction('t', function (string $category, string $message) use ($translationService) {
-            return $translationService->trans($category, $message);
+            return $translationService->t($category, $message);
         });
 
         $imageService = $this->imageService;

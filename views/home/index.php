@@ -6,10 +6,10 @@
  */
 
 $this->layout('layouts/default', [
-    'title' => 'Login & Registration test app',
+    'title' => $this->t('category', 'message'),
 ]);
 
 ?>
 
     <img id="profile-img" class="profile-img-card"
-         src="<?= $this->image('/files/avatars/default.png')->crop(128, 128) ?>"/>
+         src="<?= $this->image('/public/files/avatars/default.png')->crop(128, 128) ?>"/>
