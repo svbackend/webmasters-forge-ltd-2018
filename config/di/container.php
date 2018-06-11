@@ -22,6 +22,13 @@ $containerBuilder->register('controller_resolver', \Base\Controller\ControllerRe
     ]);
 $containerBuilder->register('argument_resolver', HttpKernel\Controller\ArgumentResolver::class);
 
+$containerBuilder->register('listener.request', \Base\EventListener\LocaleListener::class)
+    ->setArguments([
+        new Reference('translation_service'),
+        $config['locales'],
+        $config['locale']
+    ])
+;
 $containerBuilder->register('listener.router', HttpKernel\EventListener\RouterListener::class)
     ->setArguments([new Reference('matcher'), new Reference('request_stack')])
 ;
@@ -33,6 +40,7 @@ $containerBuilder->register('listener.exception', HttpKernel\EventListener\Excep
 ;
 
 $containerBuilder->register('dispatcher', EventDispatcher\EventDispatcher::class)
+    ->addMethodCall('addSubscriber', [new Reference('listener.request')])
     ->addMethodCall('addSubscriber', [new Reference('listener.router')])
     ->addMethodCall('addSubscriber', [new Reference('listener.response')])
     ->addMethodCall('addSubscriber', [new Reference('listener.exception')])

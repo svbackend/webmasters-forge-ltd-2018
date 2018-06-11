@@ -7,6 +7,7 @@ namespace Base\Service;
 // todo interface + abstract class to load translations from different sources
 class TranslationService
 {
+    private $locale;
     private $locales;
     private $translatedMessages;
     private $pathToTranslations;
@@ -29,10 +30,17 @@ class TranslationService
      */
     public function t(string $category, string $message): string
     {
-        if (!isset($this->translatedMessages[$category])) {
+        $translations = $this->translatedMessages[$this->locale];
+
+        if (!isset($translations[$category])) {
             return $message;
         }
 
-        return $this->translatedMessages[$category][$message] ?? $message;
+        return $translations[$category][$message] ?? $message;
+    }
+
+    public function setLocale(string $locale): void
+    {
+        $this->locale = $locale;
     }
 }
