@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'category' => [
-        'message' => 'Message (ru)'
+    'app' => [
+        'default_title' => 'Регистрация & Авторизация (Тестовое приложение)'
     ]
 ];

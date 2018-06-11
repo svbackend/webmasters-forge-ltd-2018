@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'category' => [
-        'message' => 'Message (en)'
+    'app' => [
+        'default_title' => 'Registration & Login (Test App)'
     ]
 ];

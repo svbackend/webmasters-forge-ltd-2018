@@ -6,7 +6,7 @@
  */
 
 $this->layout('layouts/default', [
-    'title' => $this->t('category', 'message'),
+    'title' => $this->t('app', 'default_title'),
 ]);
 
 ?>
