@@ -7,6 +7,10 @@ body, html {
     background-color: #0066CC;
 }
 
+.container {
+    margin: 0 auto;
+}
+
 .card-container .card {
     padding: 40px 40px;
 }
