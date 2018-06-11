@@ -9,11 +9,11 @@ $routes->add('home', new Route('/', [
 ]));
 
 $routes->add('login', new Route('/login', [
-    '_controller' => '\User\Controller\LoginController::loginAction'
+    '_controller' => '\Home\Controller\IndexController::loginAction'
 ]));
 
 $routes->add('registration', new Route('/registration', [
-    '_controller' => '\User\Controller\RegistrationController::registrationAction'
+    '_controller' => '\Home\Controller\IndexController::registrationAction'
 ]));
 
 return $routes;

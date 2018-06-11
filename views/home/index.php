@@ -15,9 +15,9 @@ $this->layout('layouts/default', [
         <div class="col-4">
 
             <div class="card card-container card-login">
-                <img id="profile-img" class="profile-img-card"
-                     src="<?= $this->image('/public/files/avatars/default.png')->crop(128, 128) ?>"/>
-                <form action="?" class="form signin" method="post">
+                <img id="profile-img" class="profile-img-card" src="<?= $this->image('/public/files/avatars/default.png')->crop(128, 128) ?>"/>
+                <form action="/login" class="form signin" method="post">
+                    <input type="hidden" name="form-name" value="login">
 
                     <div class="form-group">
                         <label for="loginInputEmail"><?= $this->t('app', 'Login') ?></label>
@@ -55,7 +55,7 @@ $this->layout('layouts/default', [
                         <?php endif ?>
                     </small>
 
-                    <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">
+                    <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit" name="login">
                         <?= $this->t('app', 'Sign in') ?>
                     </button>
                 </form><!-- /form -->
@@ -84,9 +84,8 @@ $this->layout('layouts/default', [
                 </div>
                 <div class="clearfix"></div>
 
-                <form action="/registration" method="post" class="form signup" id="registrationForm"
-                      enctype="multipart/form-data">
-
+                <form action="/registration" method="post" class="form signup" id="registrationForm" enctype="multipart/form-data">
+                    <input type="hidden" name="form-name" value="registration">
                     <div class="row">
                         <div class="col-md-6">
                             <label for="inputFirstName" class="required">
@@ -247,7 +246,7 @@ $this->layout('layouts/default', [
 
                     <hr>
 
-                    <button class="btn btn-lg btn-success btn-block btn-signup" type="submit">
+                    <button class="btn btn-lg btn-success btn-block btn-signup" type="submit" name="registration">
                         <?= $this->t('app', 'Sign Up!') ?>
                     </button>
                 </form><!-- /form -->
