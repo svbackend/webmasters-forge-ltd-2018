@@ -5,15 +5,22 @@ declare(strict_types=1);
 namespace Home\Controller;
 
 use Base\Controller\Controller;
+use Base\Service\ValidatorService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use User\Service\RegistrationService;
 
 class IndexController extends Controller
 {
-    public function __construct()
+    private $validator;
+    private $registrationService;
+
+    public function __construct(ValidatorService $validator, RegistrationService $registrationService)
     {
-        // todo services
+        $this->registrationService = $registrationService;
+        $this->validator = $validator;
+        // todo auth service
     }
     
     public function indexAction(array $errors = []): Response
@@ -54,10 +61,12 @@ class IndexController extends Controller
         $about = $request->get('about');
         $gender = $request->get('gender');
 
-        $this->validator->validate();
-
-
-        $this->registrationService->register($login, $email, $password, $about, $gender);
+        try {
+            $this->registrationService->register($login, $email, $password, $about, $gender);
+        } catch (\PDOException $exception) {
+            // todo error response
+            return;
+        }
         $errors = $this->authService->getErrors();
 
         if (count($errors)) {
@@ -67,7 +76,7 @@ class IndexController extends Controller
             ]);
         }
 
-        $user = $this->authService->getUser();
+        $user = $this->registrationService->getRegisteredUser();
         return new RedirectResponse("/user/{$user['id']}");
     }
 }

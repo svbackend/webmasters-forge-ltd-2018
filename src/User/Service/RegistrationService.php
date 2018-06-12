@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace User\Service;
 
-class RegisterService 
+use User\Repository\UserRepository;
+
+class RegistrationService
 {
     private $repository;
     private $registeredUser;
-    private $errors;
 
     public function __construct(UserRepository $repository)
     {
