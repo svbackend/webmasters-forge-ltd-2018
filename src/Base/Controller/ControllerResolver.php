@@ -21,7 +21,11 @@ final class ControllerResolver extends SymfonyControllerResolver
 
     protected function instantiateController($class)
     {
-        $controller = parent::instantiateController($class);
+        if ($this->container->has($class) === true) {
+            $controller = $this->container->get($class);
+        } else {
+            $controller = parent::instantiateController($class);
+        }
 
         if ($controller instanceof Controller) {
             $controller->setContainer($this->container);

@@ -16,6 +16,7 @@ $this->layout('layouts/default', [
 
             <div class="card card-container card-login">
                 <img id="profile-img" class="profile-img-card" src="<?= $this->image('/public/files/avatars/default.png')->crop(128, 128) ?>"/>
+                <?php $loginErrors = $errors['login-form'] ?? []; ?>
                 <form action="/login" class="form signin" method="post">
                     <input type="hidden" name="form-name" value="login">
 
@@ -84,6 +85,7 @@ $this->layout('layouts/default', [
                 </div>
                 <div class="clearfix"></div>
 
+                <?php $regErrors = $errors['registration-form'] ?? []; ?>
                 <form action="/registration" method="post" class="form signup" id="registrationForm" enctype="multipart/form-data">
                     <input type="hidden" name="form-name" value="registration">
                     <div class="row">
@@ -96,7 +98,7 @@ $this->layout('layouts/default', [
                                    name="first_name"
                                    placeholder="<?= $this->t('app', 'Jane') ?>">
 
-                            <?php if (isset($errors['first_name']) && $error = $errors['first_name'][0]): ?>
+                            <?php if (isset($regErrors['first_name']) && $error = $regErrors['first_name'][0]): ?>
                                 <div id="errorsinputFirstName">
                                     <div class="validationErrorMessage">
                                         <?= $error ?>
@@ -114,7 +116,7 @@ $this->layout('layouts/default', [
                                    name="last_name"
                                    placeholder="<?= $this->t('app', 'Doe') ?>">
 
-                            <?php if (isset($errors['last_name']) && $error = $errors['last_name'][0]): ?>
+                            <?php if (isset($regErrors['last_name']) && $error = $regErrors['last_name'][0]): ?>
                                 <div id="errorsinputLastName">
                                     <div class="validationErrorMessage">
                                         <?= $error ?>
@@ -157,7 +159,7 @@ $this->layout('layouts/default', [
                                name="login"
                                placeholder="<?= $this->t('app', 'JaneDoe') ?>" required aria-required="true">
 
-                        <?php if (isset($errors['login']) && $error = $errors['login'][0]): ?>
+                        <?php if (isset($regErrors['login']) && $error = $regErrors['login'][0]): ?>
                             <div id="errorsinputLogin">
                                 <div class="validationErrorMessage">
                                     <?= $error ?>
@@ -176,7 +178,7 @@ $this->layout('layouts/default', [
                         </label>
                         <input type="file" id="inputFile" name="picture">
 
-                        <?php if (isset($errors['picture']) && $error = $errors['picture'][0]): ?>
+                        <?php if (isset($regErrors['picture']) && $error = $regErrors['picture'][0]): ?>
                             <div id="errorsinputFile">
                                 <div class="validationErrorMessage">
                                     <?= $error ?>
@@ -206,7 +208,7 @@ $this->layout('layouts/default', [
                            name="email"
                            placeholder="<?= $this->t('app', 'jane.doe@example.com') ?>" required aria-required="true">
 
-                    <?php if (isset($errors['email']) && $error = $errors['email'][0]): ?>
+                    <?php if (isset($regErrors['email']) && $error = $regErrors['email'][0]): ?>
                         <div id="errorsinputEmail">
                             <div class="validationErrorMessage">
                                 <?= $error ?>
@@ -232,7 +234,7 @@ $this->layout('layouts/default', [
                     </span>
                     </div>
 
-                    <?php if (isset($errors['password']) && $error = $errors['password'][0]): ?>
+                    <?php if (isset($regErrors['password']) && $error = $regErrors['password'][0]): ?>
                         <div id="errorsinputPassword">
                             <div class="validationErrorMessage">
                                 <?= $error ?>

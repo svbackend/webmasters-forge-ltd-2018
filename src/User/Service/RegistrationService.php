@@ -18,7 +18,7 @@ class RegistrationService
     
     public function register(string $login, string $email, string $password, ?string $about = '', ?int $gender = 0): void
     {
-        $user = compact($login, $email, $password, $about, $gender);
+        $user = compact('login', 'email', 'password', 'about', 'gender');
         $this->registeredUser = $this->repository->save($user);
     }
 

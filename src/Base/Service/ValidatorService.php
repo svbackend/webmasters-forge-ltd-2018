@@ -79,7 +79,7 @@ class ValidatorService
         return $this->data[$field];
     }
 
-    public function addRule($field, $rule): void
+    public function addRule(string $field, array $rule): void
     {
         if (!isset($this->rules[$field])) {
             $this->rules[$field] = [];

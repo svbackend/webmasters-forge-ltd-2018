@@ -54,7 +54,7 @@ $containerBuilder->register('app', App::class)
     ])
 ;
 $containerBuilder
-    ->register('home_index_controller', \Home\Controller\IndexController::class)
+    ->register('\Home\Controller\IndexController', \Home\Controller\IndexController::class)
     ->setArguments([
         new Reference('validator_service'),
         new Reference('user_registration_service'),
@@ -93,7 +93,7 @@ $containerBuilder->register('user_repository', \User\Repository\UserRepository::
 ;
 $containerBuilder->register('db_connection', \PDO::class)
     ->setArguments([
-        'dsn', 'username', 'password'
+        $config['db']['dsn'], $config['db']['username'], $config['db']['password']
     ])
 ;
 

@@ -58,15 +58,15 @@ class IndexController extends Controller
         $login = $request->get('login');
         $email = $request->get('email');
         $password = $request->get('password');
-        $about = $request->get('about');
-        $gender = $request->get('gender');
+        $about = (string)$request->get('about', '');
+        $gender = (int)$request->get('gender', 0);
 
-        $this->validator->setData(compact($login, $email, $password, $about, $gender));
-        $this->validator->addRule('login', ['min' => 3, 'max' => 20, 'message' => 'Login length']);
+        $this->validator->setData(compact('login', 'email', 'password', 'about', 'gender'));
+        $this->validator->addRule('login', ['name' => 'login', 'min' => 3, 'max' => 20, 'message' => 'Login length']);
 
         if ($this->validator->validate() === false) {
-            $errors = ['login-form' => $this->validator->getErrors()];
-            return $this->forward('indexAction', [
+            $errors = ['registration-form' => $this->validator->getErrors()];
+            return $this->forward('\Home\Controller\IndexController::indexAction', [
                 'errors' => $errors
             ]);
         }
@@ -75,8 +75,8 @@ class IndexController extends Controller
             $this->registrationService->register($login, $email, $password, $about, $gender);
         } catch (\PDOException $exception) {
             $this->validator->addError('login', 'Login unique');
-            $errors = ['login-form' => $this->validator->getErrors()];
-            return $this->forward('indexAction', [
+            $errors = ['registration-form' => $this->validator->getErrors()];
+            return $this->forward('\Home\Controller\IndexController::indexAction', [
                 'errors' => $errors
             ]);
         }

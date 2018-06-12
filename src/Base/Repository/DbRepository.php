@@ -37,8 +37,10 @@ abstract class DbRepository
 
     private function createEntity(array $entity): array
     {
-        $fields = $this->getFieldsList(array_keys($entity));
-        $valuesPlaceholders = $this->getFieldsList($entity, ':');
+        $entityFields = array_keys($entity);
+        $fields = $this->getFieldsList($entityFields);
+        $valuesPlaceholders = $this->getFieldsList($entityFields, ':');
+
         $query = $this->pdo->prepare("INSERT INTO {$this->getTable()} ({$fields}) VALUES ({$valuesPlaceholders})");
 
         if ($query && $query->execute($entity)) {

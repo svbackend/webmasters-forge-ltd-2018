@@ -17,7 +17,7 @@ services:
       DB_USERNAME: wm_forge_user
       DB_PASSWORD: 123456
   mysql:
-      image: mysql:8.0
+      image: mysql:5.7
       ports:
         - 13306:3306
       environment:
