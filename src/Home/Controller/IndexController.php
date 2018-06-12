@@ -25,11 +25,12 @@ class IndexController extends Controller
         // todo auth service
     }
     
-    public function indexAction(array $errors = []): Response
+    public function indexAction(array $errors = [], array $user = []): Response
     {
         $response = $this->getTemplate()->make('home/index');
         $response->data([
-            'errors' => $errors
+            'errors' => $errors,
+            'user' => $user,
         ]);
         return new Response($response);
     }
@@ -66,14 +67,15 @@ class IndexController extends Controller
         $gender = (int)$request->get('gender', 0);
         $picture = $request->files->get('picture');
 
+        $user = compact('first_name', 'last_name', 'login', 'email', 'password', 'information', 'gender', 'picture');
         $validator = $this->addRegistrationRules($this->validator);
-        $validator->setData(
-            compact('first_name', 'last_name', 'login', 'email', 'password', 'information', 'gender', 'picture')
-        );
+        $validator->setData($user);
+
         if ($validator->validate() === false) {
             $errors = ['registration-form' => $validator->getErrors()];
             return $this->forward('\Home\Controller\IndexController::indexAction', [
-                'errors' => $errors
+                'errors' => $errors,
+                'user' => $user,
             ]);
         }
 
@@ -88,7 +90,8 @@ class IndexController extends Controller
 
             $errors = ['registration-form' => $validator->getErrors()];
             return $this->forward('\Home\Controller\IndexController::indexAction', [
-                'errors' => $errors
+                'errors' => $errors,
+                'user' => $user,
             ]);
         }
 

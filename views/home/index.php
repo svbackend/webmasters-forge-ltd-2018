@@ -94,7 +94,7 @@ $this->layout('layouts/default', [
                                 <?= $this->t('app', 'First Name') ?>
                             </label>
                             <input type="text" id="inputFirstName" class="form-control" required
-                                   value="<?= isset($model->first_name) ? $this->e($model->first_name) : '' ?>"
+                                   value="<?= isset($user['first_name']) ? $this->e($user['first_name']) : '' ?>"
                                    name="first_name"
                                    placeholder="<?= $this->t('app', 'Jane') ?>">
 
@@ -112,7 +112,7 @@ $this->layout('layouts/default', [
                                 <?= $this->t('app', 'Last Name') ?>
                             </label>
                             <input type="text" id="inputLastName" class="form-control" required
-                                   value="<?= isset($model->last_name) ? $this->e($model->last_name) : '' ?>"
+                                   value="<?= isset($user['last_name']) ? $this->e($user['last_name']) : '' ?>"
                                    name="last_name"
                                    placeholder="<?= $this->t('app', 'Doe') ?>">
 
@@ -133,7 +133,7 @@ $this->layout('layouts/default', [
                     <div class="radio">
                         <label>
                             <input type="radio" name="gender" value="<?= 0 ?>"
-                                <?= isset($model->gender) && $model->gender != $model::GENDER_FEMALE || !isset($model->gender)
+                                <?= isset($user['gender']) && $user['gender'] !== 1 || !isset($user['gender'])
                                     ? 'checked'
                                     : ''
                                 ?>
@@ -144,7 +144,7 @@ $this->layout('layouts/default', [
                     <div class="radio">
                         <label>
                             <input type="radio" name="gender" value="<?= 1 ?>"
-                                <?= isset($model->gender) && $model->gender == $model::GENDER_FEMALE ? 'checked' : '' ?>
+                                <?= isset($user['gender']) && $user['gender'] === 1 ? 'checked' : '' ?>
                             >
                             <?= $this->t('app', 'Female') ?>
                         </label>
@@ -155,7 +155,7 @@ $this->layout('layouts/default', [
                             <?= $this->t('app', 'Your nickname') ?>
                         </label>
                         <input type="text" id="inputLogin" class="form-control"
-                               value="<?= isset($model->login) ? $this->e($model->login) : '' ?>"
+                               value="<?= isset($user['login']) ? $this->e($user['login']) : '' ?>"
                                name="login"
                                placeholder="<?= $this->t('app', 'JaneDoe') ?>" required aria-required="true">
 
@@ -196,7 +196,7 @@ $this->layout('layouts/default', [
                             <?= $this->t('app', 'Information') ?>
                         </label>
                         <textarea class="form-control full-width" name="information" id="inputInformation"
-                                  cols="4"><?= isset($model->information) ? $this->e($model->information) : '' ?></textarea>
+                                  cols="4"><?= isset($user['information']) ? $this->e($user['information']) : '' ?></textarea>
                         <small class="help-block">
                             <?= $this->t('app', 'Information hint') ?>
                         </small>
@@ -204,7 +204,7 @@ $this->layout('layouts/default', [
 
                     <label for="inputEmail" class="required"><?= $this->t('app', 'Email') ?></label>
                     <input type="email" id="inputEmail" class="form-control"
-                           value="<?= isset($model->email) ? $this->e($model->email) : '' ?>"
+                           value="<?= isset($user['email']) ? $this->e($user['email']) : '' ?>"
                            name="email"
                            placeholder="<?= $this->t('app', 'jane.doe@example.com') ?>" required aria-required="true">
 
@@ -225,7 +225,7 @@ $this->layout('layouts/default', [
                     </label>
                     <div class="input-group">
                         <input type="password" id="inputPassword" class="form-control"
-                               value="<?= isset($model->password) ? $this->e($model->password) : '' ?>"
+                               value="<?= isset($user['password']) ? $this->e($user['password']) : '' ?>"
                                name="password"
                                placeholder="<?= $this->t('app', 'Password') ?>" required aria-required="true">
                         <span class="input-group-addon toggle-password" id="toggle-password"

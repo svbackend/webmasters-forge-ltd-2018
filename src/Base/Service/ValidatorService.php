@@ -37,7 +37,7 @@ class ValidatorService
         /** @var $file UploadedFile */
         $file = $this->getValue($field);
         // if file not selected
-        if ($file->getError() == 4) return;
+        if ($file === null || $file->getError() == 4) return;
         #$fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
         $fileExt = $file->getClientOriginalExtension();
 
