@@ -61,20 +61,26 @@ class IndexController extends Controller
         $about = $request->get('about');
         $gender = $request->get('gender');
 
-        try {
-            $this->registrationService->register($login, $email, $password, $about, $gender);
-        } catch (\PDOException $exception) {
-            // todo error response
-            return;
-        }
-        $errors = $this->authService->getErrors();
+        $this->validator->setData(compact($login, $email, $password, $about, $gender));
+        $this->validator->addRule('login', ['min' => 3, 'max' => 20, 'message' => 'Login length']);
 
-        if (count($errors)) {
-            $errors = ['login' => $errors];
+        if ($this->validator->validate() === false) {
+            $errors = ['login-form' => $this->validator->getErrors()];
             return $this->forward('indexAction', [
                 'errors' => $errors
             ]);
         }
+
+        try {
+            $this->registrationService->register($login, $email, $password, $about, $gender);
+        } catch (\PDOException $exception) {
+            $this->validator->addError('login', 'Login unique');
+            $errors = ['login-form' => $this->validator->getErrors()];
+            return $this->forward('indexAction', [
+                'errors' => $errors
+            ]);
+        }
+
 
         $user = $this->registrationService->getRegisteredUser();
         return new RedirectResponse("/user/{$user['id']}");

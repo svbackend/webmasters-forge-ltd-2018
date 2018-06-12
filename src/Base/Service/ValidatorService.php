@@ -107,6 +107,14 @@ class ValidatorService
         return count($this->errors) ? false : true;
     }
 
+    /**
+     * @return array
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
     public function setData(array $data): void
     {
         $this->data = $data;

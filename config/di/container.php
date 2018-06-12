@@ -55,6 +55,10 @@ $containerBuilder->register('app', App::class)
 ;
 $containerBuilder
     ->register('home_index_controller', \Home\Controller\IndexController::class)
+    ->setArguments([
+        new Reference('validator_service'),
+        new Reference('user_registration_service'),
+    ])
     ->addMethodCall('setContainer', [new Reference('service_container')]);
 $containerBuilder->register('view', \Base\Service\TemplateService::class)
     ->addMethodCall('setDirectory', [APP_ROOT . '/views'])
@@ -74,6 +78,22 @@ $containerBuilder->register('translation_service', \Base\Service\TranslationServ
     ->setArguments([
         $config['locales'],
         APP_ROOT . '/translations'
+    ])
+;
+$containerBuilder->register('validator_service', \Base\Service\ValidatorService::class);
+$containerBuilder->register('user_registration_service', \User\Service\RegistrationService::class)
+    ->setArguments([
+        new Reference('user_repository'),
+    ])
+;
+$containerBuilder->register('user_repository', \User\Repository\UserRepository::class)
+    ->setArguments([
+        new Reference('db_connection'),
+    ])
+;
+$containerBuilder->register('db_connection', \PDO::class)
+    ->setArguments([
+        'dsn', 'username', 'password'
     ])
 ;
 
