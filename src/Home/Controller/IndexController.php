@@ -7,6 +7,7 @@ namespace Home\Controller;
 use Base\Controller\Controller;
 use Base\Exception\UniqueConstraint;
 use Base\Service\ValidatorService;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -92,6 +93,11 @@ class IndexController extends Controller
         }
 
         $user = $this->registrationService->getRegisteredUser();
+
+        // Todo move it to service like UserAvatarUploader or something
+        /** @var $picture UploadedFile */
+        $picture->move(APP_ROOT . '/public/files/avatars', "{$user['id']}.jpg");
+
         return new RedirectResponse("/user/{$user['id']}");
     }
 
