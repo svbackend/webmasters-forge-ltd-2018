@@ -5,7 +5,7 @@
  */
 
 $this->layout('layouts/default', [
-    'title' => $this->t('app', 'default_title'),
+    'title' => $this->t('app', 'Login & Registration test app'),
 ]);
 
 ?>
