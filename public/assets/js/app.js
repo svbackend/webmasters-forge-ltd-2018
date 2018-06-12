@@ -62,7 +62,6 @@ function addError(field, message) {
     var errorBlockID = 'errors' + field.id;
     var errorTag = $('<div id="' + errorBlockID + '"></div>');
     var errorBlock;
-    var errors;
     var error;
 
     if (input.attr('type')) {
@@ -78,7 +77,7 @@ function addError(field, message) {
         errorBlock = $('#' + errorBlockID);
         errorBlock.append(error);
     } else {
-        input.after(errorTag.fadeIn(600));
+        input.after(errorTag);
         errorBlock = $('#' + errorBlockID);
         errorBlock.append(error);
     }
@@ -86,7 +85,7 @@ function addError(field, message) {
 
 function removeError(field) {
     var input = $('#' + field.id);
-    $('#errors' + field.id).fadeOut(300).remove();
+    $('#errors' + field.id).remove();
 
     input.removeClass('has-error');
     input.addClass('has-success');
@@ -110,17 +109,7 @@ function emailValidator(field, rule) {
 
     if (regex.test(field.value) === false) {
         addError(field, rule[1]);
-        return;
     }
-
-    $.ajax({
-        url: '/ajax/email/' + field.value,
-        success: function(json) {
-            if (json.success && json.count > 0) {
-                addError(field, rule[2]);
-            }
-        }
-    });
 }
 
 function loginValidator(field, rule) {
@@ -128,17 +117,7 @@ function loginValidator(field, rule) {
 
     if(field.value.length < rule[1] || field.value.length > rule[2] || regex.test(field.value) === false) {
         addError(field, rule[3]);
-        return;
     }
-
-    $.ajax({
-        url: '/ajax/login/' + field.value,
-        success: function(json) {
-            if (json.success && json.count > 0) {
-                addError(field, rule[4]);
-            }
-        }
-    });
 }
 
 function fileValidator(field, rule) {
