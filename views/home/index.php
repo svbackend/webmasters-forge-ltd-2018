@@ -18,8 +18,6 @@ $this->layout('layouts/default', [
                 <img id="profile-img" class="profile-img-card" src="<?= $this->image('/public/files/avatars/default.png')->crop(128, 128) ?>"/>
                 <?php $loginErrors = $errors['login-form'] ?? []; ?>
                 <form action="/login" class="form signin" method="post">
-                    <input type="hidden" name="form-name" value="login">
-
                     <div class="form-group">
                         <label for="loginInputEmail"><?= $this->t('app', 'Login') ?></label>
                         <input type="text" name="login" class="form-control" id="loginInputEmail"
@@ -27,7 +25,7 @@ $this->layout('layouts/default', [
                                placeholder="<?= $this->t('app', 'Login placeholder') ?>" required aria-required="true">
 
                         <small class="help-block">
-                            <?php if (isset($loginError)): ?>
+                            <?php if (isset($loginErrors['login'])): ?>
                                 <div class="validationErrorMessage">
                                     <?= $this->t('validation', 'User not exists') ?>
                                 </div>
@@ -49,14 +47,14 @@ $this->layout('layouts/default', [
                     </div>
 
                     <small class="help-block">
-                        <?php if (isset($passwordError)): ?>
+                        <?php if (isset($loginErrors['password'])): ?>
                             <div class="validationErrorMessage">
                                 <?= $this->t('validation', 'Invalid password') ?>
                             </div>
                         <?php endif ?>
                     </small>
 
-                    <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit" name="login">
+                    <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">
                         <?= $this->t('app', 'Sign in') ?>
                     </button>
                 </form><!-- /form -->

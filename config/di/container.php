@@ -58,6 +58,7 @@ $containerBuilder
     ->setArguments([
         new Reference('validator_service'),
         new Reference('user_registration_service'),
+        new Reference('user_auth_service'),
     ])
     ->addMethodCall('setContainer', [new Reference('service_container')]);
 $containerBuilder->register('view', \Base\Service\TemplateService::class)
@@ -82,6 +83,11 @@ $containerBuilder->register('translation_service', \Base\Service\TranslationServ
 ;
 $containerBuilder->register('validator_service', \Base\Service\ValidatorService::class);
 $containerBuilder->register('user_registration_service', \User\Service\RegistrationService::class)
+    ->setArguments([
+        new Reference('user_repository'),
+    ])
+;
+$containerBuilder->register('user_auth_service', \User\Service\AuthService::class)
     ->setArguments([
         new Reference('user_repository'),
     ])

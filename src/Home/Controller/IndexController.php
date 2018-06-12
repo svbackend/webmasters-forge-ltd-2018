@@ -7,22 +7,27 @@ namespace Home\Controller;
 use Base\Controller\Controller;
 use Base\Exception\UniqueConstraint;
 use Base\Service\ValidatorService;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use User\Repository\UserRepository;
+use User\Service\AuthService;
 use User\Service\RegistrationService;
 
 class IndexController extends Controller
 {
     private $validator;
     private $registrationService;
+    private $authService;
 
-    public function __construct(ValidatorService $validator, RegistrationService $registrationService)
+    public function __construct(ValidatorService $validator, RegistrationService $registrationService, AuthService $authService)
     {
+        $this->authService = $authService;
         $this->registrationService = $registrationService;
         $this->validator = $validator;
-        // todo auth service
     }
     
     public function indexAction(array $errors = [], array $user = []): Response
@@ -45,17 +50,16 @@ class IndexController extends Controller
         $errors = $this->authService->getErrors();
 
         if (count($errors)) {
-            $errors = ['login' => $errors];
-            return $this->forward('indexAction', [
+            $errors = ['login-form' => $errors];
+            return $this->forward('\Home\Controller\IndexController::indexAction', [
                 'errors' => $errors
             ]);
         }
 
-        $user = $this->authService->getUser();
+        $user = $this->authService->getAuthenticatedUser();
         return new RedirectResponse("/user/{$user['id']}");
     }
 
-    //todo
     public function registrationAction(Request $request)
     {
         $first_name = $request->get('first_name');
@@ -102,6 +106,41 @@ class IndexController extends Controller
         $picture->move(APP_ROOT . '/public/files/avatars', "{$user['id']}.jpg");
 
         return new RedirectResponse("/user/{$user['id']}");
+    }
+
+    // todo move to UserController
+    public function userAction(int $id)
+    {
+        // This action should be moved to another controller so I decided to get repository directly through container
+        // at this time, but it's bad practice and should be refactored
+        /** @var $userRepository UserRepository */
+        $userRepository = $this->container->get('user_repository');
+
+        if (null === $user = $userRepository->find($id)) {
+            throw new NotFoundHttpException("User with id {$id} not found");
+        }
+
+        $response = $this->getTemplate()->make('user/view');
+        $response->data([
+            'user' => $user,
+        ]);
+        return new Response($response);
+    }
+
+    // todo move to LangController
+    public function langAction(string $locale, Request $request)
+    {
+        $localeCookie = new Cookie('locale', $locale);
+        $response = new RedirectResponse('/');
+        $response->headers->setCookie($localeCookie);
+        return $response;
+    }
+
+    // todo move to UserController
+    public function logoutAction()
+    {
+        $this->authService->logout();
+        return new RedirectResponse('/');
     }
 
     private function addRegistrationRules(ValidatorService $validator): ValidatorService

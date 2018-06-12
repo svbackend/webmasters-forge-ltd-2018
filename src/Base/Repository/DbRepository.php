@@ -17,6 +17,13 @@ abstract class DbRepository
     {
         $this->pdo = $pdo;
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+        /*
+        $rows = $pdo->query("SELECT * FROM `users`");
+        foreach ($rows as $row) {
+            echo var_export($row);
+        }
+        exit;*/
     }
 
     abstract public function getIdColumn(): string;
