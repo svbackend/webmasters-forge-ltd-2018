@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Home\Controller;
 
 use Base\Controller\Controller;
+use Base\Exception\UniqueConstraint;
 use Base\Service\ValidatorService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,34 +56,88 @@ class IndexController extends Controller
     //todo
     public function registrationAction(Request $request)
     {
+        $first_name = $request->get('first_name');
+        $last_name = $request->get('last_name');
         $login = $request->get('login');
         $email = $request->get('email');
         $password = $request->get('password');
-        $about = (string)$request->get('about', '');
+        $information = (string)$request->get('information', '');
         $gender = (int)$request->get('gender', 0);
+        $picture = $request->files->get('picture');
 
-        $this->validator->setData(compact('login', 'email', 'password', 'about', 'gender'));
-        $this->validator->addRule('login', ['name' => 'login', 'min' => 3, 'max' => 20, 'message' => 'Login length']);
-
-        if ($this->validator->validate() === false) {
-            $errors = ['registration-form' => $this->validator->getErrors()];
+        $validator = $this->addRegistrationRules($this->validator);
+        $validator->setData(
+            compact('first_name', 'last_name', 'login', 'email', 'password', 'information', 'gender', 'picture')
+        );
+        if ($validator->validate() === false) {
+            $errors = ['registration-form' => $validator->getErrors()];
             return $this->forward('\Home\Controller\IndexController::indexAction', [
                 'errors' => $errors
             ]);
         }
 
         try {
-            $this->registrationService->register($login, $email, $password, $about, $gender);
-        } catch (\PDOException $exception) {
-            $this->validator->addError('login', 'Login unique');
-            $errors = ['registration-form' => $this->validator->getErrors()];
+            $this->registrationService->register($first_name, $last_name, $login, $email, $password, $information, $gender);
+        } catch (UniqueConstraint $exception) {
+            if ($exception->getField() === 'login') {
+                $validator->addError('login', 'Login unique');
+            } else {
+                $validator->addError('email', 'Email unique');
+            }
+
+            $errors = ['registration-form' => $validator->getErrors()];
             return $this->forward('\Home\Controller\IndexController::indexAction', [
                 'errors' => $errors
             ]);
         }
 
-
         $user = $this->registrationService->getRegisteredUser();
         return new RedirectResponse("/user/{$user['id']}");
+    }
+
+    private function addRegistrationRules(ValidatorService $validator): ValidatorService
+    {
+        $validator->addRule('first_name', [
+            'name' => 'string',
+            'min' => 2,
+            'max' => 30,
+            'message' => 'First Name length',
+        ]);
+        $validator->addRule('last_name', [
+            'name' => 'string',
+            'min' => 2,
+            'max' => 30,
+            'message' => 'Last Name length'
+        ]);
+        $validator->addRule('information', [
+            'name' => 'string',
+            'min' => 0,
+            'max' => 255,
+            'message' => 'Information length'
+        ]);
+        $validator->addRule('email', [
+            'name' => 'email',
+            'message' => 'Email email'
+        ]);
+
+        $validator->addRule('password', [
+            'name' => 'string',
+            'min' => 4,
+            'max' => 255,
+            'message' => 'Password length'
+        ]);
+        $validator->addRule('login', [
+            'name' => 'login',
+            'min' => 3,
+            'max' => 50,
+            'message' => 'Login length'
+        ]);
+        $validator->addRule('picture', [
+            'name' => 'file',
+            'ext' => ['jpg', 'jpeg', 'png', 'gif'],
+            'message' => 'File ext'
+        ]);
+
+        return $validator;
     }
 }

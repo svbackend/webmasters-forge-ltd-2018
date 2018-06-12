@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Base\Repository;
 
+use Base\Exception\UniqueConstraint;
+
 abstract class DbRepository
 {
     /**
@@ -14,6 +16,7 @@ abstract class DbRepository
     public function __construct(\PDO $pdo)
     {
         $this->pdo = $pdo;
+        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
     abstract public function getIdColumn(): string;
@@ -35,6 +38,11 @@ abstract class DbRepository
         // todo
     }
 
+    /**
+     * @param array $entity
+     * @return array
+     * @throws \Exception
+     */
     private function createEntity(array $entity): array
     {
         $entityFields = array_keys($entity);
@@ -43,14 +51,20 @@ abstract class DbRepository
 
         $query = $this->pdo->prepare("INSERT INTO {$this->getTable()} ({$fields}) VALUES ({$valuesPlaceholders})");
 
-        if ($query && $query->execute($entity)) {
-            $entity[$this->getIdColumn()] = $this->pdo->lastInsertId();
-            return $entity;
-        } else {
-            throw new \PDOException('Something goes wrong..');
-        }
-    }
+        try {
+            $query->execute($entity);
+        } catch (\PDOException $pdoException) {
+            $pdoCode = $pdoException->errorInfo[1];
+            if ($pdoCode === 1062) {
+                throw new UniqueConstraint($pdoException->errorInfo[2]);
+            }
 
+            throw $pdoException;
+        }
+        // id setted here
+        $entity[$this->getIdColumn()] = $this->pdo->lastInsertId();
+        return $entity;
+    }
 
     private function getFieldsList(array $fields, $prefix = null): string
     {

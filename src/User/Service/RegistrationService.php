@@ -16,9 +16,11 @@ class RegistrationService
         $this->repository = $repository;
     }
     
-    public function register(string $login, string $email, string $password, ?string $about = '', ?int $gender = 0): void
+    public function register(string $first_name, string $last_name, string $login, string $email, string $password, ?string $information = '', ?int $gender = 0): void
     {
-        $user = compact('login', 'email', 'password', 'about', 'gender');
+        $user = compact('first_name', 'last_name', 'login', 'email', 'password', 'information', 'gender');
+        $user['created_at'] = time();
+        $user['updated_at'] = time();
         $this->registeredUser = $this->repository->save($user);
     }
 

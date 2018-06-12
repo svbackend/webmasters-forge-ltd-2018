@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Base\Service;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 class ValidatorService
 {
     private $data = [];
@@ -32,16 +34,16 @@ class ValidatorService
          * @var $message
          */
         extract($rule);
+        /** @var $file UploadedFile */
         $file = $this->getValue($field);
         // if file not selected
-        if ($file['error'] == 4) return;
-        $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
+        if ($file->getError() == 4) return;
+        #$fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $fileExt = $file->getClientOriginalExtension();
+
         if (in_array($fileExt, $ext) === false) {
             $this->addError($field, $message);
             return;
-        }
-        if (exif_imagetype($file['tmp_name']) === false) {
-            $this->addError($field, $message);
         }
     }
 
